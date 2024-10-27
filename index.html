@@ -5,160 +5,253 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shift Registration System</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f7f7f7; }
-    .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    h2 { color: #333; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: bold; }
-    input[type="text"], input[type="password"], select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-    .button { background-color: #28a745; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer; }
-    .button:hover { background-color: #218838; }
-    .options button { margin: 10px 0; width: 100%; }
-    .shift-member { display: flex; align-items: center; justify-content: space-between; }
-    .shift-member button { background: none; border: none; cursor: pointer; font-size: 1.2em; }
-    .checkmark { color: green; }
-    .crossmark { color: red; }
+    /* General Styling */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+    .container {
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    .button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+    }
+    .button-green {
+      background-color: #28a745;
+      color: white;
+    }
+    .button-red {
+      background-color: #dc3545;
+      color: white;
+    }
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .shift-member {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 5px 0;
+    }
+    .shift-member button {
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .status-container {
+      display: flex;
+      gap: 10px;
+    }
+    .status-button {
+      padding: 8px 12px;
+      font-size: 16px;
+      border-radius: 4px;
+    }
+    .selected-green {
+      outline: 2px solid green;
+    }
+    .selected-red {
+      outline: 2px solid red;
+    }
   </style>
 </head>
 <body>
+  <div class="container" id="registration-container">
+    <h2>Register</h2>
+    <input type="text" id="name" class="input-field" placeholder="Name" required>
+    <input type="text" id="surname" class="input-field" placeholder="Surname" required>
+    <input type="text" id="username" class="input-field" placeholder="Username" required>
+    <input type="password" id="password" class="input-field" placeholder="Password" required>
+    <button class="button button-green" onclick="register()">Create Account</button>
+  </div>
 
-<div class="container" id="mainContainer">
-  <h2>SHIFT REGISTRATION SYSTEM</h2>
-  
-  <div id="registrationForm">
-    <div class="form-group">
-      <label for="name">First Name:</label>
-      <input type="text" id="firstName">
+  <div class="container" id="login-container" style="display: none;">
+    <h2>Login</h2>
+    <input type="text" id="login-username" class="input-field" placeholder="Username" required>
+    <input type="password" id="login-password" class="input-field" placeholder="Password" required>
+    <button class="button button-green" onclick="login()">Login</button>
+  </div>
+
+  <div class="container" id="options-container" style="display: none;">
+    <h2>Shift Registration System</h2>
+    <button class="button button-green" onclick="showAddEditShift()">Add/Edit Shift Members</button>
+    <button class="button button-green" onclick="showRegisterShift()">Register Shift Members</button>
+    <button class="button button-green" onclick="showShiftStatus()">Shift Status</button>
+  </div>
+
+  <div class="container" id="add-edit-container" style="display: none;">
+    <h2>Add/Edit Shift Members</h2>
+    <input type="text" id="shift-member-name" class="input-field" placeholder="Shift Member Name">
+    <select id="shift-day" class="input-field">
+      <option>Monday</option>
+      <option>Tuesday</option>
+      <option>Wednesday</option>
+      <option>Thursday</option>
+      <option>Friday</option>
+    </select>
+    <button class="button button-green" onclick="addShiftMember()">Add Shift Member</button>
+    <ul id="shift-member-list"></ul>
+  </div>
+
+  <div class="container" id="register-container" style="display: none;">
+    <h2>Register Shift Members</h2>
+    <ul id="registered-list"></ul>
+    <button class="button button-green" onclick="saveAttendance()">Save Attendance</button>
+  </div>
+
+  <div class="container" id="status-container" style="display: none;">
+    <h2>Shift Status</h2>
+    <input type="password" id="status-password" class="input-field" placeholder="Enter Password">
+    <button class="button button-green" onclick="viewShiftStatus()">View Status</button>
+    <div id="shift-status-content" style="display: none;">
+      <ul id="shift-status-list"></ul>
     </div>
-    <div class="form-group">
-      <label for="lastName">Last Name:</label>
-      <input type="text" id="lastName">
-    </div>
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input type="text" id="username">
-    </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" id="password">
-    </div>
-    <button class="button" onclick="registerUser()">Create Account</button>
-  </div>
-  
-  <div id="options" style="display: none;">
-    <button class="button" onclick="showShiftManagement()">ADD/EDIT SHIFT MEMBERS</button>
-    <button class="button" onclick="showRegisterShift()">REGISTER SHIFT MEMBERS</button>
-    <button class="button" onclick="showShiftStatus()">SHIFT STATUS</button>
-  </div>
-  
-  <div id="shiftManagement" style="display: none;">
-    <h3>Manage Shift Members</h3>
-    <button class="button" onclick="addShiftMember()">Add Shift Member</button>
-    <div id="shiftList"></div>
-    <button class="button" onclick="confirmShiftMembers()">Confirm Shift Members</button>
-  </div>
-  
-  <div id="registerShift" style="display: none;">
-    <h3>Register Shift Members</h3>
-    <div id="attendanceList"></div>
-    <button class="button" onclick="saveAttendance()">Save Attendance</button>
   </div>
 
-  <div id="shiftStatus" style="display: none;">
-    <h3>SHIFT STATUS</h3>
-    <div id="shiftStatusContent"></div>
-  </div>
-</div>
+  <script>
+    let users = {};
+    let currentUser = null;
+    let shiftMembers = [];
 
-<script>
-  let users = {};
-  let currentUser = null;
-  let shiftMembers = {};
-  let attendance = {};
+    function register() {
+      const name = document.getElementById('name').value;
+      const surname = document.getElementById('surname').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
 
-  function registerUser() {
-    const firstName = document.getElementById("firstName").value;
-    const lastName = document.getElementById("lastName").value;
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    if (firstName && lastName && username && password) {
-      users[username] = { name: `${firstName} ${lastName}`, password, shiftMembers: [] };
-      currentUser = username;
-      alert(`Account created for ${firstName} ${lastName}`);
-      document.getElementById("registrationForm").style.display = "none";
-      document.getElementById("options").style.display = "block";
-    } else {
-      alert("Please fill out all fields.");
+      if (username && password) {
+        users[username] = { name, surname, password, shiftMembers: [] };
+        alert('Registration successful!');
+        document.getElementById('registration-container').style.display = 'none';
+        document.getElementById('login-container').style.display = 'block';
+      } else {
+        alert('Please fill all fields.');
+      }
     }
-  }
 
-  function showShiftManagement() {
-    document.getElementById("shiftManagement").style.display = "block";
-    document.getElementById("shiftList").innerHTML = users[currentUser].shiftMembers.map(
-      (member, index) => `
-        <div class="shift-member">
-          ${member} 
-          <button onclick="editShiftMember(${index})">&#9998;</button>
-          <button onclick="deleteShiftMember(${index})">&#10006;</button>
-        </div>`
-    ).join("");
-  }
+    function login() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
 
-  function addShiftMember() {
-    const memberName = prompt("Enter member name:");
-    const day = prompt("Enter day (Monday-Friday):");
-    if (memberName && day) {
-      users[currentUser].shiftMembers.push(`${memberName} (${day})`);
-      showShiftManagement();
+      if (users[username] && users[username].password === password) {
+        currentUser = username;
+        shiftMembers = users[username].shiftMembers;
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('options-container').style.display = 'block';
+      } else {
+        alert('Invalid login credentials.');
+      }
     }
-  }
 
-  function deleteShiftMember(index) {
-    users[currentUser].shiftMembers.splice(index, 1);
-    showShiftManagement();
-  }
-
-  function confirmShiftMembers() {
-    alert("Shift members confirmed!");
-  }
-
-  function showRegisterShift() {
-    document.getElementById("registerShift").style.display = "block";
-    document.getElementById("attendanceList").innerHTML = users[currentUser].shiftMembers.map(
-      (member, index) => `
-        <div class="shift-member">
-          ${member}
-          <button class="checkmark" onclick="markAttendance(${index}, true)">&#10003;</button>
-          <button class="crossmark" onclick="markAttendance(${index}, false)">&#10005;</button>
-        </div>`
-    ).join("");
-  }
-
-  function markAttendance(index, attended) {
-    const member = users[currentUser].shiftMembers[index];
-    attendance[member] = attended ? "Attended" : "Not Attended";
-  }
-
-  function saveAttendance() {
-    const date = new Date().toLocaleDateString();
-    const time = new Date().toLocaleTimeString();
-    document.getElementById("shiftStatusContent").innerHTML = Object.entries(attendance).map(
-      ([member, status]) => `<p>${member} - ${date} - ${time} - ${status}</p>`
-    ).join("");
-    attendance = {};
-    alert("Attendance saved!");
-  }
-
-  function showShiftStatus() {
-    const password = prompt("Enter password for SHIFT STATUS:");
-    if (password === "47351") {
-      document.getElementById("shiftStatus").style.display = "block";
-    } else {
-      alert("Incorrect password.");
+    function showAddEditShift() {
+      document.getElementById('options-container').style.display = 'none';
+      document.getElementById('add-edit-container').style.display = 'block';
+      displayShiftMembers();
     }
-  }
-</script>
 
+    function addShiftMember() {
+      const name = document.getElementById('shift-member-name').value;
+      const day = document.getElementById('shift-day').value;
+
+      if (name) {
+        shiftMembers.push({ name, day });
+        users[currentUser].shiftMembers = shiftMembers;
+        displayShiftMembers();
+      }
+    }
+
+    function displayShiftMembers() {
+      const list = document.getElementById('shift-member-list');
+      list.innerHTML = '';
+      shiftMembers.forEach((member, index) => {
+        list.innerHTML += `
+          <li class="shift-member">
+            ${member.name} (${member.day})
+            <button onclick="removeShiftMember(${index})">🗑️</button>
+          </li>
+        `;
+      });
+    }
+
+    function removeShiftMember(index) {
+      shiftMembers.splice(index, 1);
+      users[currentUser].shiftMembers = shiftMembers;
+      displayShiftMembers();
+    }
+
+    function showRegisterShift() {
+      document.getElementById('options-container').style.display = 'none';
+      document.getElementById('register-container').style.display = 'block';
+      displayRegisteredList();
+    }
+
+    function displayRegisteredList() {
+      const list = document.getElementById('registered-list');
+      list.innerHTML = '';
+      shiftMembers.forEach((member, index) => {
+        list.innerHTML += `
+          <li>
+            ${member.name} (${member.day})
+            <div class="status-container">
+              <button class="status-button button-green" onclick="markAttendance(${index}, 'attended')">✔</button>
+              <button class="status-button button-red" onclick="markAttendance(${index}, 'not attended')">✘</button>
+            </div>
+          </li>
+        `;
+      });
+    }
+
+    function markAttendance(index, status) {
+      shiftMembers[index].status = status;
+    }
+
+    function saveAttendance() {
+      alert('Attendance saved!');
+    }
+
+    function showShiftStatus() {
+      document.getElementById('options-container').style.display = 'none';
+      document.getElementById('status-container').style.display = 'block';
+    }
+
+    function viewShiftStatus() {
+      const password = document.getElementById('status-password').value;
+      if (password === '47351') {
+        const list = document.getElementById('shift-status-list');
+        list.innerHTML = '';
+        shiftMembers.forEach(member => {
+          if (member.status) {
+            list.innerHTML += `
+              <li>${member.name} (${member.day}) - ${member.status}</li>
+            `;
+          }
+        });
+        document.getElementById('shift-status-content').style.display = 'block';
+      } else {
+        alert('Incorrect password.');
+      }
+    }
+  </script>
 </body>
 </html>
